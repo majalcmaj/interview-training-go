@@ -4,9 +4,23 @@ import (
 	"testing"
 )
 
-func TestHelloName(t *testing.T) {
-	result := doSomething()
-	if result != 10 {
-		t.Errorf(`Expected to get 1`)
+func TestCreateAccountWithNonExistentIdYieldsNoError(t *testing.T) {
+	ledger := NewLedger()
+
+	err := ledger.CreateAccount(1, 1)
+
+	if err != nil {
+		t.Error(`Expected no error`)
+	}
+}
+
+func TestCreateAccountWithExistingIdYieldsError(t *testing.T) {
+	ledger := NewLedger()
+
+	_ = ledger.CreateAccount(1, 1)
+	err := ledger.CreateAccount(2, 1)
+
+	if err == nil {
+		t.Error(`Expected account creation error`)
 	}
 }
