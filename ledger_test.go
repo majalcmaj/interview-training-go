@@ -24,3 +24,13 @@ func TestCreateAccountWithExistingIdYieldsError(t *testing.T) {
 		t.Error(`Expected account creation error`)
 	}
 }
+
+func TestDepositToNonExistentAccountYieldsError(t *testing.T) {
+	ledger := NewLedger()
+
+	err := ledger.Deposit(2, 1, 100)
+
+	if err == nil {
+		t.Error(`Account does not exist - expected error`)
+	}
+}

@@ -31,6 +31,10 @@ func (l *Ledger) CreateAccount(timestamp Timestamp, id AccountId) error {
 }
 
 func (l *Ledger) Deposit(timestamp Timestamp, account AccountId, amount MoneyAmount) error {
+	_, exists := l.accounts[account]
+	if !exists {
+		return errors.New(fmt.Sprintf("Account with id %d does not exist", account))
+	}
 	return nil
 }
 
