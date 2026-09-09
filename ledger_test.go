@@ -98,3 +98,16 @@ func TestTransferToSameAccountYieldsError(t *testing.T) {
 		t.Error(`Cannot transfer to same account`)
 	}
 }
+
+func TestTransferWithInsufficientFundsYieldsError(t *testing.T) {
+	ledger := NewLedger()
+	ledger.CreateAccount(1, 1)
+	ledger.CreateAccount(2, 2)
+	_ = ledger.Deposit(3, 1, 100)
+
+	err := ledger.Transfer(4, 1, 2, 150)
+
+	if err == nil {
+		t.Error(`Cannot transfer when insufficient balance`)
+	}
+}

@@ -40,7 +40,7 @@ func (l *Ledger) Deposit(timestamp Timestamp, account AccountId, amount MoneyAmo
 }
 
 func (l *Ledger) Transfer(timestamp Timestamp, fromAccount AccountId, toAccount AccountId, amount MoneyAmount) error {
-	_, fromExists := l.accounts[fromAccount]
+	fromBalance, fromExists := l.accounts[fromAccount]
 	_, toExists := l.accounts[toAccount]
 	if !fromExists || !toExists {
 		return errors.New(fmt.Sprintf("Accounts with ids %d and %d need to exist", fromAccount, toAccount))
@@ -50,6 +50,10 @@ func (l *Ledger) Transfer(timestamp Timestamp, fromAccount AccountId, toAccount 
 		return errors.New(fmt.Sprintf("Cannot transfer to same account %d", fromAccount))
 	}
 
+	if fromBalance-amount < 0 {
+		return errors.New(fmt.Sprintf("Insufficient funds on account %d", fromAccount))
+
+	}
 	return nil
 }
 
