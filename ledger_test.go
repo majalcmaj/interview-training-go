@@ -1,6 +1,8 @@
 package main
 
 import (
+	"slices"
+	"sort"
 	"testing"
 )
 
@@ -131,5 +133,61 @@ func TestSuccessfulTransfer(t *testing.T) {
 	_, toBalance := ledger.GetCurrentBalance(2)
 	if toBalance != 80 {
 		t.Errorf(`Expected account 2 balance to be 80 but was: %d`, toBalance)
+	}
+}
+
+func TestTopNSpendersWhenNoAccountsYieldsEmptySlice(t *testing.T) {
+	ledger := NewLedger()
+
+	topSpenders := ledger.GetTopSpenders(3)
+
+	if len(topSpenders) != 0 {
+		t.Fatalf("Should get empty slice when no accounts added")
+	}
+}
+
+func TestTopNSpendersWhenSomeAccountsPresent(t *testing.T) {
+	ledger := NewLedger()
+	ledger.CreateAccount(1, 1)
+	ledger.CreateAccount(2, 2)
+	ledger.Deposit(3, 1, 100)
+	ledger.Transfer(4, 1, 2, 10)
+
+	topSpenders := ledger.GetTopSpenders(3)
+
+	assertTopSpenderIds(t, []AccountId{1, 2}, topSpenders)
+}
+
+func TestTopNSpendersWhenMoreThanNAccountsPresent(t *testing.T) {
+	ledger := NewLedger()
+	ledger.CreateAccount(1, 1)
+	ledger.CreateAccount(2, 2)
+	ledger.CreateAccount(3, 3)
+	ledger.CreateAccount(4, 4)
+	ledger.CreateAccount(5, 5)
+	ledger.CreateAccount(6, 6)
+	ledger.Deposit(7, 1, 100)
+	ledger.Deposit(8, 2, 100)
+	ledger.Deposit(9, 3, 100)
+	ledger.Deposit(10, 4, 100)
+	ledger.Deposit(11, 5, 100)
+	ledger.Deposit(12, 6, 100)
+
+	ledger.Transfer(13, 1, 2, 10)
+	ledger.Transfer(14, 6, 1, 100) // 6 has spendings of 100 -> 1st
+	ledger.Transfer(15, 1, 2, 15)  // 1 has spendings of 25 -> 3rd
+	ledger.Transfer(16, 3, 6, 20)  // 3 has spendings of 20
+	ledger.Transfer(17, 2, 3, 30)  // 2 has spendings of 30 -> 2nd
+	ledger.Transfer(18, 4, 5, 5)   // 4 has spendings of 5
+
+	topSpenders := ledger.GetTopSpenders(3)
+
+	assertTopSpenderIds(t, []AccountId{1, 2, 6}, topSpenders)
+}
+
+func assertTopSpenderIds(t *testing.T, expected, actual []AccountId) {
+	sort.Slice(actual, func(i, j int) bool { return actual[i] < actual[j] })
+	if !slices.Equal(expected, actual) {
+		t.Fatalf("Expected top spenders with ids %v but got %v", expected, actual)
 	}
 }
