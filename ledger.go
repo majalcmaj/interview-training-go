@@ -11,7 +11,7 @@ import (
 
 type Timestamp int
 type AccountId int
-type MoneyAmount int
+type MoneyAmount uint
 
 type Ledger struct {
 	accounts map[AccountId]MoneyAmount
@@ -50,7 +50,7 @@ func (l *Ledger) Transfer(timestamp Timestamp, fromAccount AccountId, toAccount 
 		return errors.New(fmt.Sprintf("Cannot transfer to same account %d", fromAccount))
 	}
 
-	if fromBalance-amount < 0 {
+	if fromBalance < amount {
 		return errors.New(fmt.Sprintf("Insufficient funds on account %d", fromAccount))
 
 	}
@@ -65,7 +65,7 @@ func (l *Ledger) GetCurrentBalance(account AccountId) (error, MoneyAmount) {
 	balance, exists := l.accounts[account]
 
 	if !exists {
-		return errors.New(fmt.Sprintf("Account with id %d does not exist", account)), -1
+		return errors.New(fmt.Sprintf("Account with id %d does not exist", account)), 1
 	}
 
 	return nil, balance
