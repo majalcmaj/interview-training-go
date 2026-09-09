@@ -111,3 +111,25 @@ func TestTransferWithInsufficientFundsYieldsError(t *testing.T) {
 		t.Error(`Cannot transfer when insufficient balance`)
 	}
 }
+
+func TestSuccessfulTransfer(t *testing.T) {
+	ledger := NewLedger()
+	ledger.CreateAccount(1, 1)
+	ledger.CreateAccount(2, 2)
+	_ = ledger.Deposit(3, 1, 100)
+
+	err := ledger.Transfer(4, 1, 2, 80)
+
+	if err != nil {
+		t.Errorf(`Transfer failure: %v`, err)
+	}
+
+	_, fromBalance := ledger.GetCurrentBalance(1)
+	if fromBalance != 20 {
+		t.Errorf(`Expected account 1 balance to be 20 but was: %d`, fromBalance)
+	}
+	_, toBalance := ledger.GetCurrentBalance(2)
+	if toBalance != 80 {
+		t.Errorf(`Expected account 2 balance to be 80 but was: %d`, toBalance)
+	}
+}

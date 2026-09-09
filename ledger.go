@@ -54,6 +54,10 @@ func (l *Ledger) Transfer(timestamp Timestamp, fromAccount AccountId, toAccount 
 		return errors.New(fmt.Sprintf("Insufficient funds on account %d", fromAccount))
 
 	}
+
+	l.accounts[fromAccount] -= amount
+	l.accounts[toAccount] += amount
+
 	return nil
 }
 
