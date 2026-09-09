@@ -71,3 +71,30 @@ func TestDepositToAccountChangesBalance(t *testing.T) {
 		t.Errorf(`Expected value of 150 on the account, got %d`, amount)
 	}
 }
+
+func TestTransferFromOrToNotExistingAccountYieldsError(t *testing.T) {
+	ledger := NewLedger()
+	ledger.CreateAccount(1, 1)
+	_ = ledger.Deposit(2, 1, 100)
+
+	for _, err := range []error{
+		ledger.Transfer(3, 2, 3, 10),
+		ledger.Transfer(4, 1, 2, 10),
+		ledger.Transfer(5, 2, 1, 10),
+	} {
+		if err == nil {
+			t.Error(`tansfers from/to non-existing accounts should fail`)
+		}
+	}
+}
+
+func TestTransferToSameAccountYieldsError(t *testing.T) {
+	ledger := NewLedger()
+	ledger.CreateAccount(1, 1)
+	_ = ledger.Deposit(2, 1, 100)
+
+	err := ledger.Transfer(3, 1, 1, 10)
+	if err == nil {
+		t.Error(`Cannot transfer to same account`)
+	}
+}
