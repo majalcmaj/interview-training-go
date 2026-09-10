@@ -11,7 +11,7 @@ func TestAverageOfSubtreeYieldsExpectedResults(t *testing.T) {
 	}{
 		{[]int{4, 8, 5, 0, 1, -1, 6}, 5},
 		{[]int{1}, 1},
-		{[]int{1, 1, 1}, 2},
+		{[]int{1, 1, 1}, 3},
 		{[]int{4, -1, 5, -1, -1, -1, 6}, 2}, // Verify numbers
 	} {
 		root := arrayToGraph(d.nodes)
