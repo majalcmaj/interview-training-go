@@ -10,6 +10,7 @@ func TestNumberOfSets(t *testing.T) {
 		{4, 2, 5},
 		{3, 1, 3},
 		{30, 7, 796297179},
+		{52, 23, 963678472},
 	} {
 		res := numberOfSets(d.n, d.k)
 		if res != d.expect {

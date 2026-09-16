@@ -1,5 +1,7 @@
 package main
 
+const MOD_BY = 1e9 + 7
+
 func _numberOfSets(n int, k int) int64 {
 	dp := make([][]int64, k+1)
 
@@ -15,7 +17,7 @@ func _numberOfSets(n int, k int) int64 {
 		for j := i; j <= n; j++ {
 			dp[i][j] = dp[i][j-1]
 			for l := i; l < j; l++ {
-				dp[i][j] += dp[i-1][l]
+				dp[i][j] = (dp[i][j] + dp[i-1][l]) % MOD_BY
 			}
 		}
 	}
@@ -24,5 +26,5 @@ func _numberOfSets(n int, k int) int64 {
 }
 
 func numberOfSets(n int, k int) int {
-	return int(_numberOfSets(n, k) % (1e9 + 7))
+	return int(_numberOfSets(n, k))
 }
