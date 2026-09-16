@@ -1,7 +1,5 @@
 package main
 
-import "fmt"
-
 func oddPalindromes(s string, k int) []bool {
 	margin := k / 2
 	dp := make([]bool, len(s))
@@ -49,49 +47,31 @@ func evenPalindromes(s string, k int) []bool {
 }
 
 func maxPalindromes(s string, k int) int {
-	if k%2 == 0 {
-		even := evenPalindromes(s, k)
-		odd := oddPalindromes(s, k+1)
+	n := len(s)
 
-		fmt.Printf("O:%v\nE:%v\n", odd, even)
+	// Smallest odd length >= k, and smallest even length >= k.
+	evenK := k + k%2
+	odd := oddPalindromes(s, k)
+	even := evenPalindromes(s, evenK)
 
-		lastFoundIdx := -k - 1
-		count := 0
-		for i := 0; i < len(even); i++ { // Is this number good?
-			if (odd[i] || even[i]) && lastFoundIdx < i-k {
-				lastFoundIdx = i
-				count += 1
-				odd[i] = true  // TODO - rm
-				even[i] = true // TODO - rm
-			} else {
-				odd[i] = false  // TODO - rm
-				even[i] = false // TODO - rm
-			}
-		}
-		if odd[len(odd)-1] {
+	marginOdd := k / 2
+	marginEven := evenK / 2
+	lenOdd := 2*marginOdd + 1
+	lenEven := 2 * marginEven
+
+	lastEnd := -1
+	count := 0
+	for end := 0; end < n; end++ {
+		i := end - marginOdd
+		oddOK := i >= 0 && i < len(odd) && odd[i] && end-lenOdd+1 > lastEnd
+
+		j := end - marginEven
+		evenOK := j >= 0 && j < len(even) && even[j] && end-lenEven+1 > lastEnd
+
+		if oddOK || evenOK {
 			count++
+			lastEnd = end
 		}
-		// fmt.Printf("O: %v\n\n %v\n", odd, even)
-		return count
-	} else {
-		odd := oddPalindromes(s, k)
-		even := evenPalindromes(s, k+1)
-
-		fmt.Printf("O:%v\nE:%v\n", odd, even)
-		lastFoundIdx := -k - 1
-		count := 0
-		for i := 0; i < len(even); i++ { // Is this number good?
-			if (odd[i] || even[i]) && lastFoundIdx <= i-k {
-				lastFoundIdx = i
-				count += 1
-				odd[i] = true // TODO - rm
-			} else {
-				odd[i] = false // TODO - rm
-			}
-		}
-		if odd[len(odd)-1] {
-			count++
-		}
-		return count
 	}
+	return count
 }

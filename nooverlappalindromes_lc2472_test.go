@@ -52,17 +52,17 @@ func TestMaxOverlappingPalindromes(t *testing.T) {
 		k, expected int
 	}{
 		{"qvlbphaahpblshrwzzwrhscaivaeffllffeanwtlaaltwngtupwkwwkwpuaa", 10, 5},
-		//{"aa", 2, 1},
-		//{"baa", 3, 0},
-		//	{"fttfjofpnpfydwdwdnns", 2, 4},
-		//	{"gataghmwwmoeyeov", 4, 3},
-		//	{"abaccdbbd", 3, 2},
-		//	{"abaaba", 3, 2},
-		//	{"abaccdbbd", 1, 9},
-		//	{"adbcda", 2, 0},
-		//	{"aaaaaaaaa", 3, 3},
-		//	{"cabaccabac", 4, 2},
-		//	{"aaaaaaaaa", 4, 2},
+		{"aa", 2, 1},
+		{"baa", 3, 0},
+		{"fttfjofpnpfydwdwdnns", 2, 4},
+		{"gataghmwwmoeyeov", 4, 3},
+		{"abaccdbbd", 3, 2},
+		{"abaaba", 3, 2},
+		{"abaccdbbd", 1, 9},
+		{"adbcda", 2, 0},
+		{"aaaaaaaaa", 3, 3},
+		{"cabaccabac", 4, 2},
+		{"aaaaaaaaa", 4, 2},
 	} {
 		res := maxPalindromes(d.s, d.k)
 		if res != d.expected {
