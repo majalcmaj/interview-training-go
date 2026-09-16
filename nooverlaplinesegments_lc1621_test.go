@@ -6,6 +6,7 @@ func TestNumberOfSets(t *testing.T) {
 	for _, d := range []struct {
 		n, k, expect int
 	}{
+		{2, 1, 1},
 		{4, 2, 5},
 		{3, 1, 3},
 		{30, 7, 796297179},

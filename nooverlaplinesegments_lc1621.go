@@ -1,18 +1,26 @@
 package main
 
 func _numberOfSets(n int, k int) int64 {
-	// fmt.Printf("n %d k %d\n", n, k)
-	if k == 0 {
-		return 1
+	dp := make([][]int64, k+1)
+
+	for i := 0; i < k+1; i++ {
+		dp[i] = make([]int64, n+1)
 	}
-	if n == 0 {
-		return 0
+
+	for i := 0; i <= n; i++ {
+		dp[0][i] = 1
 	}
-	sum := _numberOfSets(n-1, k)
-	for i := k; i < n; i++ {
-		sum += _numberOfSets(i, k-1)
+
+	for i := 1; i <= k; i++ {
+		for j := i; j <= n; j++ {
+			dp[i][j] = dp[i][j-1]
+			for l := i; l < j; l++ {
+				dp[i][j] += dp[i-1][l]
+			}
+		}
 	}
-	return sum
+
+	return dp[k][n]
 }
 
 func numberOfSets(n int, k int) int {
