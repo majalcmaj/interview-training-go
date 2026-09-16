@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"slices"
 	"testing"
 )
@@ -27,7 +26,7 @@ func TestOddPalindromes(t *testing.T) {
 }
 
 func TestEvenPalindromes(t *testing.T) {
-	for idx, d := range []struct {
+	for _, d := range []struct {
 		s      string
 		k      int
 		expect []bool
@@ -38,7 +37,6 @@ func TestEvenPalindromes(t *testing.T) {
 		{"abaaba", 6, []bool{false, false, true, false, false}},
 		{"aaaaaa", 2, []bool{true, true, true, true, true}},
 	} {
-		fmt.Printf("Running %d\n", idx)
 		res := evenPalindromes(d.s, d.k)
 		if !slices.Equal(res, d.expect) {
 			t.Errorf("Expected %v, got %v for s=%s, k=%d", d.expect, res, d.s, d.k)
